@@ -102,7 +102,7 @@ jobs:
           tags: |
             ${{ inputs.EE_IMAGE_TAG }}
             ${{ github.sha }}
-          registry: quay.io/${{ QUAY_REPO }}
+          registry: quay.io/${{ inputs.QUAY_REPO }}
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_PASSWORD }}
 
