@@ -1,0 +1,132 @@
+---
+name: EE Build (reusable)
+
+on:  # yamllint disable-line rule:truthy
+  workflow_call:
+    inputs:
+      EE_FOLDER_NAME:
+        description: >-
+          Name of the folder where the EE definition is located
+          (Will become the name of the EE)
+        default: ''
+        required: true
+        type: string
+      EE_IMAGE_TAG:
+        description: >-
+          Tag name for the image
+        default: 'latest'
+        required: true
+        type: string
+      QUAY_REPO:
+        description: >-
+          Name of the quay repository to push the image to
+        required: true
+        type: string
+    secrets:
+      QUAY_USERNAME:
+        description: >-
+          Username to use for logging into the quay.io container registry
+        required: true
+      QUAY_PASSWORD:
+        description: >-
+          Password to use for logging into the quay.io container registry
+        required: true
+      REDHAT_USERNAME:
+        description: >-
+          Username to use for logging into the registry.redhat.io container
+          registry
+        required: true
+      REDHAT_PASSWORD:
+        description: >-
+          Password to use for logging into the registry.redhat.io container
+          registry
+        required: true
+      AH_TOKEN:
+        description: >-
+          API token to use for Red Hat hosted Automation Hub
+        required: true
+
+jobs:
+
+  build-ee:
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install python requirements
+        run: pip install -r requirements.txt
+
+      - name: Login to quay.io
+        id: registry-quay
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Login to registry.redhat.io
+        id: registry-redhat
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.REDHAT_USERNAME }}
+          password: ${{ secrets.REDHAT_PASSWORD }}
+
+      - name: Configure Automation Hub token
+        id: ah-token
+        run: |
+          sed -i "s/my_ah_token/$AH_TOKEN/1" ansible.cfg
+        env:
+          AH_TOKEN: ${{ secrets.AH_TOKEN }}
+
+      - name: Build image
+        id: build-image
+        working-directory: ${{ inputs.EE_FOLDER_NAME }}
+        run: >-
+          ansible-builder build
+          --context=../${{ inputs.EE_FOLDER_NAME }}
+          --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
+          --tag=${{ inputs.EE_FOLDER_NAME }}:${{ github.sha }}
+#         env:
+#           ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN: ${{ secrets.AH_TOKEN }}
+# Above env var doesn't work yet:
+#   https://github.com/ansible/ansible-builder/issues/346
+
+      - name: Push to quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ inputs.EE_FOLDER_NAME }}
+          tags: |
+            ${{ inputs.EE_IMAGE_TAG }}
+            ${{ github.sha }}
+          registry: quay.io/${{ inputs.QUAY_REPO }}
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      # yamllint disable rule:line-length
+
+      - name: Print summary
+        working-directory: ${{ inputs.EE_FOLDER_NAME }}
+        run: |
+          echo "## :rocket: Usage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Image pushed to repository: [${{ steps.push-to-quay.outputs.registry-path }}](https://${{ steps.push-to-quay.outputs.registry-path }})" >> $GITHUB_STEP_SUMMARY
+          echo "> \`podman pull ${{ steps.push-to-quay.outputs.registry-path }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "> \`podman pull quay.io/${{ inputs.QUAY_USER }}/${{ inputs.EE_FOLDER_NAME }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "## :pushpin: Ansible info:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "`podman run ${{ inputs.EE_FOLDER_NAME }} ansible --version`" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "## :pushpin: Installed collections:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "`podman run ${{ inputs.EE_FOLDER_NAME }} ansible-galaxy collection list`" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "## :pushpin: Containerfile:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "`cat Containerfile`" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
