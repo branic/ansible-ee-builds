@@ -1,0 +1,29 @@
+---
+name: Ansible EE build
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'ansible-ee/**'
+
+  # schedule:
+  #   - cron: '0 0 * * 0'
+
+  # Allow manual run from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  call-deploy-workflow:
+    uses: branic/ansible-ee/.github/workflows/deploy.yml@main
+    with:
+      EE_FOLDER_NAME: 'ansible-ee'
+      EE_IMAGE_TAG: 'latest'
+      QUAY_USER: 'branic'
+    secrets:
+      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+      QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
+      REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
+      AH_TOKEN: ${{ secrets.AH_TOKEN }}

@@ -1,0 +1,5 @@
+kubernetes >= 12.0.0
+ansible-lint
+molecule
+molecule-podman
+yamllint
