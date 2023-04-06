@@ -4,7 +4,7 @@ name: Pre-commit autoupdate
 on:  # yamllint disable-line rule:truthy
   schedule:
     # Run daily at 5am
-    - cron: '0 19 * * *'
+    - cron: '0 5,22 * * *'
 
 jobs:
   auto-update:
