@@ -5,7 +5,7 @@ I use.
 
 ## Build Status
 
-![Ansible EE build](https://github.com/bevans/ansible-ee/actions/workflows/ansible-ee-build.yml/badge.svg)
+![Ansible EE build](https://github.com/branic/ansible-ee/actions/workflows/ansible-ee-build.yml/badge.svg)
 
 ## Contributions
 
