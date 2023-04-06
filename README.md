@@ -3,6 +3,10 @@
 This repo contains the definitions for Ansible Execution Environments (EE) that
 I use.
 
+## Build Status
+
+![Ansible EE build](https://github.com/bevans/ansible-ee/actions/workflows/ansible-ee-build.yml/badge.svg)
+
 ## Contributions
 
 Contributions to this repo are welcomed. New directories must follow the format
