@@ -22,11 +22,18 @@ jobs:
       - name: Run pre-commit autoupdate
         run: pre-commit autoupdate
 
+      - name: Generate app token
+        id: app-token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.CPR_GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           branch: pre-commit-autoupdate
           delete-branch: true
           title: Auto-update pre-commit hooks
