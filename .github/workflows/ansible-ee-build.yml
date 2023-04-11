@@ -16,13 +16,12 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   call-deploy-workflow:
-    uses: branic/ansible-ee/.github/workflows/deploy-ee.yml@main
+    uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
     with:
       EE_FOLDER_NAME: 'ansible-ee'
       EE_IMAGE_TAG: 'latest'
-      QUAY_REPO: 'branic'
+      QUAY_USER: 'branic'
     secrets:
-      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
       QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
       REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
       REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
