@@ -70,25 +70,17 @@ jobs:
           username: ${{ secrets.REDHAT_USERNAME }}
           password: ${{ secrets.REDHAT_PASSWORD }}
 
-      - name: Configure Automation Hub token
-        id: ah-token
-        run: |
-          sed -i "s/my_ah_token/$AH_TOKEN/1" ansible.cfg
-        env:
-          AH_TOKEN: ${{ secrets.AH_TOKEN }}
-
       - name: Build image
         id: build-image
         working-directory: ${{ inputs.EE_FOLDER_NAME }}
+        env:
+          ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN: ${{ secrets.AH_TOKEN }}
         run: >-
           ansible-builder build
           --context=../${{ inputs.EE_FOLDER_NAME }}
           --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
           --tag=${{ inputs.EE_FOLDER_NAME }}:${{ github.sha }}
-#         env:
-#           ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN: ${{ secrets.AH_TOKEN }}
-# Above env var doesn't work yet:
-#   https://github.com/ansible/ansible-builder/issues/346
+          --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
 
       - name: Push to quay.io
         id: push-to-quay
