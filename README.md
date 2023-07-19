@@ -6,8 +6,8 @@ I use.
 ## Build Statuses
 
 ![Pre-commit Validation](https://github.com/branic/ansible-ee/actions/workflows/pre-commit.yml/badge.svg)
-
 ![Ansible EE build](https://github.com/branic/ansible-ee/actions/workflows/ansible-ee-build.yml/badge.svg)
+![AWS EE build](https://github.com/branic/ansible-ee/actions/workflows/aws-ee-build.yml/badge.svg)
 
 ## Contributions
 
