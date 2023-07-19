@@ -1,19 +1,45 @@
 ---
-version: 1
+version: 3
 
-build_arg_defaults:
-  EE_BASE_IMAGE: >-
-    'registry.redhat.io/ansible-automation-platform/ee-minimal-rhel8:2.14'
+images:
+  base_image:
+    name: registry.redhat.io/ansible-automation-platform/ee-minimal-rhel9:2.15
 
-ansible_config: '../ansible.cfg'
+additional_build_files:
+  - dest: configs
+    src: ../ansible.cfg
 
+# OpenShift/Kubernetes related collections are not included due to needing to
+# fix the build process after converting to ansible-builder v3
 dependencies:
-  galaxy: requirements.yml
-  python: requirements.txt
-  # system: bindep.txt
+  python:
+    - kubernetes >= 12.0.0
+  galaxy:
+    collections:
+      - name: ansible.controller
+      - name: ansible.posix
+      - name: awx.awx
+      - name: community.general
+      # - name: community.okd
+      - name: containers.podman
+      - name: fedora.linux_system_roles
+      - name: freeipa.ansible_freeipa
+      # - name: kubernetes.core
+      # - name: redhat.openshift
+      - name: redhat.rhel_idm
+      - name: redhat.rhel_system_roles
+      - name: redhat.satellite
+      - name: theforeman.foreman
+    roles: []
 
 additional_build_steps:
-  prepend: |
+  prepend_base: |
     RUN pip3 install --upgrade pip setuptools
-  append: |
+  prepend_galaxy:
+    - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
+    - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
+  append_final: |
     LABEL quay.expires-after="45d"
+
+options:
+  package_manager_path: /usr/bin/microdnf
