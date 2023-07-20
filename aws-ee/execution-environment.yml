@@ -10,6 +10,8 @@ additional_build_files:
     src: ../ansible.cfg
 
 dependencies:
+  system:
+    - unzip [platform:rpm]
   galaxy:
     collections:
       - name: amazon.aws
@@ -23,6 +25,11 @@ additional_build_steps:
     - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
   append_final:
+    # yamllint disable-line rule:line-length
+    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/awscliv2.zip" &&
+          unzip /awscliv2.zip -d /aws-install &&
+          /aws-install/aws/install &&
+          rm -rf /aws-install /awscliv2.zip
     - LABEL quay.expires-after="45d"
 
 options:
