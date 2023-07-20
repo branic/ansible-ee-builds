@@ -1,10 +1,10 @@
 ---
-name: Ansible EE build
+name: Ansible EE build - builder v1
 
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - 'main'
+      - 'builder_v1.2'
     paths:
       - 'ansible-ee/**'
 
@@ -19,7 +19,7 @@ jobs:
     uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
     with:
       EE_FOLDER_NAME: 'ansible-ee'
-      EE_IMAGE_TAG: 'v1-latest'
+      EE_IMAGE_TAG: 'builder-v1-latest'
       QUAY_USER: 'branic'
     secrets:
       QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
