@@ -19,7 +19,7 @@ jobs:
     uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
     with:
       EE_FOLDER_NAME: 'ansible-ee'
-      EE_IMAGE_TAG: 'latest'
+      EE_IMAGE_TAG: 'v1-latest'
       QUAY_USER: 'branic'
     secrets:
       QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
