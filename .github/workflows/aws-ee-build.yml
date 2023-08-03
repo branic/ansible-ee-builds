@@ -16,7 +16,7 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   call-deploy-workflow:
-    uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
+    uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@builder_v1.2
     with:
       EE_FOLDER_NAME: 'aws-ee'
       EE_IMAGE_TAG: 'builder-v1-latest'
