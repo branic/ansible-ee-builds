@@ -3,15 +3,20 @@ version: 3
 
 images:
   base_image:
-    name: registry.redhat.io/ansible-automation-platform/ee-minimal-rhel9:2.15
+    name: quay.io/fedora/fedora:latest
 
 additional_build_files:
   - dest: configs
     src: ../ansible.cfg
 
-# OpenShift/Kubernetes related collections are not included due to needing to
-# fix the build process after converting to ansible-builder v3
 dependencies:
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+  system:
+    - openssh-clients
+    - sshpass
   python:
     - kubernetes >= 12.0.0
   galaxy:
@@ -20,12 +25,12 @@ dependencies:
       - name: ansible.posix
       - name: awx.awx
       - name: community.general
-      # - name: community.okd
+      - name: community.okd
       - name: containers.podman
       - name: fedora.linux_system_roles
       - name: freeipa.ansible_freeipa
-      # - name: kubernetes.core
-      # - name: redhat.openshift
+      - name: kubernetes.core
+      - name: redhat.openshift
       - name: redhat.rhel_idm
       - name: redhat.rhel_system_roles
       - name: redhat.satellite
@@ -33,13 +38,8 @@ dependencies:
     roles: []
 
 additional_build_steps:
-  prepend_base: |
-    RUN pip3 install --upgrade pip setuptools
   prepend_galaxy:
     - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
   append_final: |
     LABEL quay.expires-after="45d"
-
-options:
-  package_manager_path: /usr/bin/microdnf
