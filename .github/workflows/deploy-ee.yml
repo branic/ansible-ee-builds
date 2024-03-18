@@ -57,7 +57,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install python requirements
-        run: pip3 install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Login to quay.io
         id: registry-quay
