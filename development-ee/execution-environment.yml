@@ -23,7 +23,6 @@ dependencies:
     - ansible-lint
     - molecule
     - molecule-plugins
-    - ansible-pylibssh
   galaxy:
     collections:
       - name: ansible.controller
