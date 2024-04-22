@@ -1,0 +1,46 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: quay.io/fedora/fedora:latest
+
+additional_build_files:
+  - dest: configs
+    src: ../ansible.cfg
+
+dependencies:
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+  system:
+    - openssh-clients [platform:rpm]
+    - unzip [platform:rpm]
+  python:
+    - kubernetes >= 12.0.0
+  galaxy:
+    collections:
+      - name: amazon.aws
+      - name: community.aws
+      - name: community.general
+      - name: community.okd
+      - name: kubernetes.core
+      - name: redhat.openshift
+    roles: []
+
+additional_build_steps:
+  prepend_galaxy:
+    - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
+    - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
+  append_final:
+    # yamllint disable-line rule:line-length
+    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/awscliv2.zip" &&
+          unzip /awscliv2.zip -d /aws-install &&
+          /aws-install/aws/install &&
+          rm -rf /aws-install /awscliv2.zip
+    # yamllint disable-line rule:line-length
+    - RUN curl "https://mirror.openshift.com/pub/openshift-v4/clients/rosa/latest/rosa-linux.tar.gz" -o "/rosa-linux.tar.gz" &&
+          tar zxvf /rosa-linux.tar.gz -C /usr/local/bin --no-same-owner &&
+          rm -rf /rosa-linux.tar.gz
+    - LABEL quay.expires-after="45d"
