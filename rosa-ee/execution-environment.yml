@@ -40,7 +40,7 @@ additional_build_steps:
           /aws-install/aws/install &&
           rm -rf /aws-install /awscliv2.zip
     # yamllint disable-line rule:line-length
-    - RUN curl "https://mirror.openshift.com/pub/openshift-v4/clients/rosa/latest/rosa-linux.tar.gz" -o "/rosa-linux.tar.gz" &&
+    - RUN curl -L "https://mirror.openshift.com/pub/openshift-v4/clients/rosa/latest/rosa-linux.tar.gz" -o "/rosa-linux.tar.gz" &&
           tar zxvf /rosa-linux.tar.gz -C /usr/local/bin --no-same-owner &&
           rm -rf /rosa-linux.tar.gz
     - LABEL quay.expires-after="45d"
