@@ -21,7 +21,6 @@ on:  # yamllint disable-line rule:truthy
         description: >-
           Name of the Organization in Quay to use when pushing the image
         type: string
-        required: true
         default: 'branic'
     secrets:
       QUAY_USERNAME:
