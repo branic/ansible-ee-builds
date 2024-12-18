@@ -1,0 +1,28 @@
+---
+name: Azure EE build
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'azure-ee/**'
+
+  schedule:
+    - cron: '0 0 * * 0'
+
+  # Allow manual run from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  call-deploy-workflow:
+    uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
+    with:
+      EE_FOLDER_NAME: 'azure-ee'
+      EE_IMAGE_TAG: 'latest'
+      QUAY_USER: 'branic'
+    secrets:
+      QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
+      REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
+      AH_TOKEN: ${{ secrets.AH_TOKEN }}
