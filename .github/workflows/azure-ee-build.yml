@@ -20,8 +20,8 @@ jobs:
     with:
       EE_FOLDER_NAME: 'azure-ee'
       EE_IMAGE_TAG: 'latest'
-      QUAY_USER: 'branic'
     secrets:
+      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME}}
       QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
       REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
       REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
