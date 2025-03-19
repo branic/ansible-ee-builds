@@ -20,7 +20,6 @@ dependencies:
   system:
     - openssh-clients
     - sshpass
-    - unzip
   python:
     - kubernetes >= 12.0.0
     - ansible-lint
@@ -32,23 +31,11 @@ dependencies:
       - name: ansible.controller
       - name: ansible.hub
       - name: ansible.eda
-      - name: ansible.posix
-      - name: awx.awx
-      - name: community.general
-      - name: community.okd
-      - name: containers.podman
-      - name: fedora.linux_system_roles
-      - name: freeipa.ansible_freeipa
       - name: infra.aap_configuration
       - name: infra.aap_utilities
+      - name: ansible.posix
       - name: kubernetes.core
       - name: redhat.openshift
-      - name: redhat.rhel_idm
-      - name: redhat.rhel_system_roles
-      - name: redhat.satellite
-      - name: theforeman.foreman
-      - name: amazon.aws
-      - name: community.aws
     roles: []
 
 additional_build_steps:
@@ -58,9 +45,4 @@ additional_build_steps:
     - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
   append_final:
-    # yamllint disable-line rule:line-length
-    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/awscliv2.zip" &&
-          unzip /awscliv2.zip -d /aws-install &&
-          /aws-install/aws/install &&
-          rm -rf /aws-install /awscliv2.zip
     - LABEL quay.expires-after="45d"

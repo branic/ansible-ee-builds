@@ -5,9 +5,13 @@ I use.
 
 ## Build Statuses
 
-![Pre-commit Validation](https://github.com/branic/ansible-ee/actions/workflows/pre-commit.yml/badge.svg)
-![Ansible EE build](https://github.com/branic/ansible-ee/actions/workflows/ansible-ee-build.yml/badge.svg)
-![AWS EE build](https://github.com/branic/ansible-ee/actions/workflows/aws-ee-build.yml/badge.svg)
+![Pre-commit Validation](https://github.com/branic/ansible-ee-builds/actions/workflows/pre-commit.yml/badge.svg)
+![AAP EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/aap-ee-build.yml/badge.svg)
+![Ansible EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/ansible-ee-build.yml/badge.svg)
+![AWS EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/aws-ee-build.yml/badge.svg)
+![Azure EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/azure-ee-build.yml/badge.svg)
+![Development EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/development-ee.yml/badge.svg)
+![ROSA EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/rosa-ee.yml/badge.svg)
 
 ## Contributions
 
