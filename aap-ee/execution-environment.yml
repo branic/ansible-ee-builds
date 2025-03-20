@@ -30,7 +30,7 @@ dependencies:
       - name: ansible.platform
       - name: ansible.controller
       - name: ansible.hub
-      - name: ansible.eda
+      # - name: ansible.eda
       - name: infra.aap_configuration
       - name: infra.aap_utilities
       - name: ansible.posix

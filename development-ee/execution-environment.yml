@@ -31,7 +31,7 @@ dependencies:
       - name: ansible.platform
       - name: ansible.controller
       - name: ansible.hub
-      - name: ansible.eda
+      # - name: ansible.eda
       - name: ansible.posix
       - name: awx.awx
       - name: community.general
