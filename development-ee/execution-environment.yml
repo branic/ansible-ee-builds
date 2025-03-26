@@ -21,11 +21,13 @@ dependencies:
     - openssh-clients
     - sshpass
     - unzip
+    - git
   python:
     - kubernetes >= 12.0.0
-    - ansible-lint
-    - molecule
-    - molecule-plugins
+    # - ansible-lint
+    # - molecule
+    # - molecule-plugins
+    - ansible-dev-tools
   galaxy:
     collections:
       - name: ansible.platform
@@ -40,6 +42,7 @@ dependencies:
       - name: fedora.linux_system_roles
       - name: freeipa.ansible_freeipa
       - name: infra.aap_configuration
+      - name: infra.controller_configuration
       - name: infra.aap_utilities
       - name: kubernetes.core
       - name: redhat.openshift
