@@ -7,6 +7,8 @@ on:  # yamllint disable-line rule:truthy
       - 'main'
     paths:
       - 'ansible-ee/**'
+      - '.github/workflows/ansible-ee-build.yml'
+      - '.github/workflows/deploy-ee.yml'
 
   schedule:
     - cron: '0 0 * * 0'

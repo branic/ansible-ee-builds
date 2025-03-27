@@ -4,6 +4,8 @@ extends: default
 # yamllint disable rule:line-length
 
 rules:
+  line-length:
+    max: 100
   colons: enable
   indentation:
     level: warning

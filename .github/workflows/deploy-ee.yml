@@ -83,13 +83,15 @@ jobs:
         id: build-image
         working-directory: ${{ inputs.EE_FOLDER_NAME }}
         env:
-          ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN: ${{ secrets.AH_TOKEN }}
+          ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_VALIDATED_TOKEN: ${{ secrets.AH_TOKEN }}
+          ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_CERTIFIED_TOKEN: ${{ secrets.AH_TOKEN }}
         run: >-
           ansible-builder build
           --context=../${{ inputs.EE_FOLDER_NAME }}
           --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
           --tag=${{ inputs.EE_FOLDER_NAME }}:${{ github.sha }}
-          --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
+          --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_VALIDATED_TOKEN
+          --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_CERTIFIED_TOKEN
 
       - name: Push to quay.io
         id: push-to-quay

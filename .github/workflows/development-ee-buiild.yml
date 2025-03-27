@@ -1,12 +1,14 @@
 ---
-name: ROSA EE build
+name: Development EE build
 
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - 'main'
     paths:
-      - 'rosa-ee/**'
+      - 'development-ee/**'
+      - '.github/workflows/development-ee-build.yml'
+      - '.github/workflows/deploy-ee.yml'
 
   schedule:
     - cron: '0 0 * * 0'
@@ -18,7 +20,7 @@ jobs:
   call-deploy-workflow:
     uses: branic/ansible-ee-builds/.github/workflows/deploy-ee.yml@main
     with:
-      EE_FOLDER_NAME: 'rosa-ee'
+      EE_FOLDER_NAME: 'development-ee'
       EE_IMAGE_TAG: 'latest'
     secrets:
       QUAY_USERNAME: ${{ secrets.QUAY_USERNAME}}
