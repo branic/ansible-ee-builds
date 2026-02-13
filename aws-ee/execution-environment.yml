@@ -3,7 +3,10 @@ version: 3
 
 images:
   base_image:
-    name: quay.io/fedora/fedora:latest
+    name: registry.redhat.io/ubi9-minimal:latest
+
+options:
+  package_manager_path: /usr/bin/microdnf
 
 additional_build_files:
   - dest: configs
@@ -11,14 +14,12 @@ additional_build_files:
 
 dependencies:
   python_interpreter:
-    package_system: python3
-    python_path: /usr/bin/python3
+    package_system: python3.12
+    python_path: /usr/bin/python3.12
   ansible_core:
-    package_pip: ansible-core
+    package_pip: "ansible-core>=2.18,<2.19"
   ansible_runner:
     package_pip: ansible-runner
-  system:
-    - unzip
   galaxy:
     collections:
       - name: amazon.aws
@@ -27,16 +28,18 @@ dependencies:
     roles: []
 
 additional_build_steps:
-  prepend_base:
-    - RUN dnf install -y python3 python3-pip python3-libdnf5
   prepend_galaxy:
     - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_VALIDATED_TOKEN
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_CERTIFIED_TOKEN
   append_final:
-    # yamllint disable-line rule:line-length
-    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/awscliv2.zip" &&
-          unzip /awscliv2.zip -d /aws-install &&
+    # Install AWS CLI v2 (curl from image; install/remove unzip for this step only)
+    # yamllint disable rule:line-length
+    - RUN $PKGMGR install -y unzip &&
+          /usr/bin/curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /awscliv2.zip &&
+          /usr/bin/unzip /awscliv2.zip -d /aws-install &&
           /aws-install/aws/install &&
-          rm -rf /aws-install /awscliv2.zip
+          rm -rf /aws-install /awscliv2.zip &&
+          $PKGMGR remove -y unzip && $PKGMGR clean all
+    # yamllint enable rule:line-length
     - LABEL quay.expires-after="45d"
