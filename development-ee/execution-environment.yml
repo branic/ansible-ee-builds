@@ -3,7 +3,10 @@ version: 3
 
 images:
   base_image:
-    name: quay.io/fedora/fedora:latest
+    name: registry.redhat.io/ubi9-minimal:latest
+
+options:
+  package_manager_path: /usr/bin/microdnf
 
 additional_build_files:
   - dest: configs
@@ -11,16 +14,15 @@ additional_build_files:
 
 dependencies:
   python_interpreter:
-    package_system: python3
-    python_path: /usr/bin/python3
+    package_system: python3.12
+    python_path: /usr/bin/python3.12
   ansible_core:
-    package_pip: ansible-core
+    package_pip: "ansible-core>=2.18,<2.19"
   ansible_runner:
     package_pip: ansible-runner
   system:
     - openssh-clients
     - sshpass
-    - unzip
     - git
   python:
     - kubernetes >= 12.0.0
@@ -29,6 +31,7 @@ dependencies:
     collections:
       - name: ansible.platform
       - name: ansible.controller
+        version: ">=4.5.0,<4.6.0"
       - name: ansible.hub
       # - name: ansible.eda
       - name: ansible.posix
@@ -50,18 +53,38 @@ dependencies:
       - name: amazon.aws
       - name: community.aws
     roles: []
+  # Don't install openshift-clients RPM (not in UBI minimal repos). We provide oc via tarball.
+  exclude:
+    system:
+      - openshift-clients
 
 additional_build_steps:
-  prepend_base:
-    - RUN dnf install -y python3 python3-pip python3-libdnf5
   prepend_galaxy:
     - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_VALIDATED_TOKEN
     - ARG ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_CERTIFIED_TOKEN
-  append_final:
+  # Build-only deps: installed only in builder stage for building systemd-python/gssapi wheels.
+  prepend_builder:
+    - RUN $PKGMGR install -y gcc python3.12-devel pkg-config systemd-devel krb5-devel &&
+          if [ -z "${PKGMGR_PRESERVE_CACHE}" ]; then $PKGMGR clean all; fi
+  prepend_final:
+    - ARG OPENSHIFT_CLIENT_VERSION=stable
     # yamllint disable-line rule:line-length
-    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/awscliv2.zip" &&
-          unzip /awscliv2.zip -d /aws-install &&
+    - ARG OPENSHIFT_CLIENT_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OPENSHIFT_CLIENT_VERSION}/openshift-client-linux.tar.gz
+    # yamllint disable-line rule:line-length
+    - ARG AWS_CLIENT_URL=https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+  append_final:
+    # Install AWS CLI v2 (curl from image; install/remove unzip for this step only)
+    - RUN $PKGMGR install -y unzip &&
+          /usr/bin/curl -sL $AWS_CLIENT_URL -o /awscliv2.zip &&
+          /usr/bin/unzip /awscliv2.zip -d /aws-install &&
           /aws-install/aws/install &&
-          rm -rf /aws-install /awscliv2.zip
+          rm -rf /aws-install /awscliv2.zip &&
+          $PKGMGR remove -y unzip && $PKGMGR clean all
+    # Install OpenShift CLI to satisfy openshift-clients requirement (RPM not in UBI minimal repos)
+    - RUN $PKGMGR install -y tar &&
+          /usr/bin/curl -sL $OPENSHIFT_CLIENT_URL -o /tmp/oc.tar.gz &&
+          /usr/bin/tar -xzf /tmp/oc.tar.gz -C /usr/local/bin oc kubectl &&
+          rm /tmp/oc.tar.gz && chmod +x /usr/local/bin/oc /usr/local/bin/kubectl &&
+          $PKGMGR remove -y tar && $PKGMGR clean all
     - LABEL quay.expires-after="45d"
