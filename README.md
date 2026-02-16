@@ -6,12 +6,12 @@ I use.
 ## Build Statuses
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/branic/ansible-ee-builds/main.svg)](https://results.pre-commit.ci/latest/github/branic/ansible-ee-builds/main)
-![AAP EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/aap-ee-build.yml/badge.svg)
-![Ansible EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/ansible-ee-build.yml/badge.svg)
-![AWS EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/aws-ee-build.yml/badge.svg)
-![Azure EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/azure-ee-build.yml/badge.svg)
-![Development EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/development-ee.yml/badge.svg)
-![ROSA EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/rosa-ee.yml/badge.svg)
+[![AAP EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-aap-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-aap-ee.yml)
+[![Ansible EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-ansible-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-ansible-ee.yml)
+[![AWS EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-aws-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-aws-ee.yml)
+[![Azure EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-azure-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-azure-ee.yml)
+[![Development EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-development-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-development-ee.yml)
+[![ROSA EE build](https://github.com/branic/ansible-ee-builds/actions/workflows/build-rosa-ee.yml/badge.svg)](https://github.com/branic/ansible-ee-builds/actions/workflows/build-rosa-ee.yml)
 
 ## Contributions
 
