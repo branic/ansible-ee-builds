@@ -43,3 +43,7 @@ additional_build_steps:
           $PKGMGR remove -y unzip && $PKGMGR clean all
     # yamllint enable rule:line-length
     - LABEL quay.expires-after="45d"
+    - RUN rm -rf /etc/yum.repos.d/* /var/{cache,lib}/{dnf,yum} /etc/pip.conf
+    - ENV DESCRIPTION="branic/aws-ee
+          built on {{ '%Y-%m-%d %H:%M:%S' | strftime }}
+          from commit {{ lookup('pipe', 'git rev-parse --short HEAD || echo N/A') }}"

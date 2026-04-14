@@ -60,3 +60,7 @@ additional_build_steps:
           rm /tmp/oc.tar.gz && chmod +x /usr/local/bin/oc /usr/local/bin/kubectl &&
           $PKGMGR remove -y tar && $PKGMGR clean all
     - LABEL quay.expires-after="45d"
+    - RUN rm -rf /etc/yum.repos.d/* /var/{cache,lib}/{dnf,yum} /etc/pip.conf
+    - ENV DESCRIPTION="branic/ansible-ee
+          built on {{ '%Y-%m-%d %H:%M:%S' | strftime }}
+          from commit {{ lookup('pipe', 'git rev-parse --short HEAD || echo N/A') }}"
