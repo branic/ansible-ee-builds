@@ -28,6 +28,7 @@ dependencies:
   galaxy:
     collections:
       - name: ansible.posix
+      - name: branic.system_management
       - name: community.general
       - name: containers.podman
       - name: fedora.linux_system_roles
