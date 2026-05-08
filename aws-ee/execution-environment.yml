@@ -20,6 +20,10 @@ dependencies:
     package_pip: "ansible-core>=2.18,<2.19"
   ansible_runner:
     package_pip: ansible-runner
+  system:
+    - openssh-clients
+    - sshpass
+    - less
   galaxy:
     collections:
       - name: amazon.aws

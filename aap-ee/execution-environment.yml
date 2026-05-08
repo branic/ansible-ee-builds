@@ -23,6 +23,7 @@ dependencies:
   system:
     - openssh-clients
     - sshpass
+    - less
   python:
     - kubernetes >= 12.0.0
     - ansible-lint

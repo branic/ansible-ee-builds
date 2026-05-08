@@ -24,6 +24,7 @@ dependencies:
     - openssh-clients
     - sshpass
     - git
+    - less
   python:
     - kubernetes >= 12.0.0
     - ansible-dev-tools
