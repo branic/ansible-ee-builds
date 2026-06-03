@@ -48,6 +48,7 @@ dependencies:
       - name: infra.aap_utilities
       - name: kubernetes.core
       - name: redhat.openshift
+      - name: redhat.rhbk
       - name: redhat.rhel_idm
       - name: redhat.rhel_system_roles
       - name: redhat.satellite
