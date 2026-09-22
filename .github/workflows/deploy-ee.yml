@@ -65,7 +65,7 @@ jobs:
 
       - name: Login to quay.io
         id: registry-quay
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@v2
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
@@ -73,7 +73,7 @@ jobs:
 
       - name: Login to registry.redhat.io
         id: registry-redhat
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@v2
         with:
           registry: registry.redhat.io
           username: ${{ secrets.REDHAT_USERNAME }}
@@ -95,7 +95,7 @@ jobs:
 
       - name: Push to quay.io
         id: push-to-quay
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ inputs.EE_FOLDER_NAME }}
           tags: |
